@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace BugredAPI
@@ -18,10 +19,10 @@ namespace BugredAPI
         {
             RestRequest request = new RestRequest(Method.POST);
             request.AddHeader("content-type", "application/json");
-            request.AddJsonBody(body);
+            request.AddJsonBody(JsonConvert.SerializeObject(body));
 
             IRestResponse response = _client.Execute(request);
-            JObject json = JObject.Parse(response.Content);
+            //JObject json = JObject.Parse(response.Content);
             return response;
         }
     }

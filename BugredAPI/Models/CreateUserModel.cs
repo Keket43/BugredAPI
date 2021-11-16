@@ -11,9 +11,12 @@ namespace BugredAPI.Models
 
         [JsonProperty("name")]
         public string Name { get; set; }
+        
+        [JsonProperty("tasks")]
+        public List<int> Tasks { get; set; }
 
-        [JsonProperty("password")]
-        public string Password { get; set; }          
- 
+        [JsonProperty("companies")]
+        public List<int> Companies { get; set; }
+
     }
 }

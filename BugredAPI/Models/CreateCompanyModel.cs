@@ -16,13 +16,6 @@ namespace BugredAPI.Models
 
         [JsonProperty("email_owner")]
         public string EmailOwner { get; set; }
-
-        public CreateCompanyModel(string company_name, string company_type, List<string> company_users, string email_owner)
-        {
-            this.CompanyName = company_name;
-            this.CompanyType = company_type;
-            this.CompanyUsers = company_users;
-            this.EmailOwner = email_owner;
-        }
+      
     }
 }

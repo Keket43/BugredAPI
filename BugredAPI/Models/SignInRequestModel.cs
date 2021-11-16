@@ -13,12 +13,5 @@ namespace BugredAPI.Models
 
         [JsonProperty("password")]
         public string Password { get; set; }
-
-        public SignInRequestModel(string email, string name, string password)
-        {
-            this.Email = email;
-            this.Name = name;
-            this.Password = password;
-        }
     }
 }
