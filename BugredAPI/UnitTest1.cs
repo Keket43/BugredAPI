@@ -93,7 +93,7 @@ namespace BugredAPI
             Helper helper = new Helper();
             
             RequestHelper requestHelper = new RequestHelper("tasks/rest/doregister");
-            CreateUser body = new CreateUser
+            CreateUserModel body = new CreateUserModel
             {
                 Email = "Shopopalo@fake.com",
                 Password = "mySecretPass123"
