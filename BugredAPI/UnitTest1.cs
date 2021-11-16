@@ -1,3 +1,4 @@
+using BugredAPI.Models;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
@@ -16,10 +17,6 @@ namespace BugredAPI
         }
         public void Test1()
         {
-            //1. 
-            //урл, добавить хедеры,  создать тело запроса, добавить тело к запросу, отправить запрос
-
-
             RestClient client = new RestClient("http://users.bugred.ru/tasks/rest/doregister")
             {
                 Timeout = 300000
@@ -39,17 +36,8 @@ namespace BugredAPI
 
             Assert.AreEqual("OK", response.StatusCode.ToString());
             Assert.AreEqual(body["email"], json["accounts"]["email"].ToString());
-
-        }
-       
-        //{
-        //  
-
-        //    Assert.AreEqual(body["email"], json["email"]?.ToString());
-        //    Assert.AreEqual(body["name"], json["name"]?.ToString());
-
-        //}
-
+            Assert.AreEqual(body["name"], json["name"]?.ToString());
+        }   
 
         public Dictionary<string, string> DoRegisterUserData()
         {
@@ -62,6 +50,62 @@ namespace BugredAPI
                 { "name", userName },
                 { "password", "mySecretPass123" },
             };
+        }
+        [Test]
+        public void RegistrationTestValidData()
+        {
+            Helper helper = new Helper();
+            SignInRequestModel body = new SignInRequestModel(helper.GenerateEmail(), helper.GenerateName(), "mySecretPass123");
+            RequestHelper requestHelper = new RequestHelper("/doregister");
+            IRestResponse response = requestHelper.SendPostRequest(body);
+            JObject json = JObject.Parse(response.Content);
+
+            Assert.AreEqual("OK", response.StatusCode.ToString());
+        }
+
+        [Test]
+        public void RegistrationInvalidPassword()
+        {
+            Helper helper = new Helper();
+            SignInRequestModel body = new SignInRequestModel("Shopopalo@fake.com", "Juk", "notMySecret");
+            RequestHelper requestHelper = new RequestHelper("/doregister");
+            IRestResponse response = requestHelper.SendPostRequest(body);
+            JObject json = JObject.Parse(response.Content);
+
+            Assert.AreEqual(body.Name, json["name"]?.ToString());
+        }
+
+        [Test]
+        public void RegistrationInvalidEmailAndName()
+        {
+            Helper helper = new Helper();
+            SignInRequestModel body = new SignInRequestModel("blablaemail", "Juk", "mySecretPass123");
+            RequestHelper requestHelper = new RequestHelper("/doregister");
+
+            IRestResponse response = requestHelper.SendPostRequest(body);
+            JObject json = JObject.Parse(response.Content);
+                       
+            Assert.AreEqual(body.Name, json["name"]?.ToString());
+        }
+        [Test]
+        public void CreateUser()
+        {
+            Helper helper = new Helper();
+            
+            RequestHelper requestHelper = new RequestHelper("tasks/rest/doregister");
+            CreateUser body = new CreateUser
+            {
+                Email = "Shopopalo@fake.com",
+                Password = "mySecretPass123"
+            };
+           
+            IRestResponse response = requestHelper.SendPostRequest(body);
+            JObject json = JObject.Parse(response.Content);
+
+            Assert.AreEqual("OK", response.StatusCode.ToString());
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(body.Email, json["email"].ToString());
+            Assert.AreEqual(body.Password, json["password"].ToString());
         }
     }
 }
